@@ -1,0 +1,119 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/ShubhanshuRaj-BMS/1BM23CS325_ShubhanshuRaj_AI/blob/main/Forward_Reasoning\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "class KnowledgeBase:\n",
+        "    def __init__(self):\n",
+        "        self.facts = set()\n",
+        "        self.rules = []\n",
+        "\n",
+        "    def add_fact(self, fact):\n",
+        "        self.facts.add(fact)\n",
+        "\n",
+        "    def add_rule(self, premises, conclusion):\n",
+        "        self.rules.append((premises, conclusion))\n",
+        "\n",
+        "    def infer(self):\n",
+        "        new_inferred = True\n",
+        "        while new_inferred:\n",
+        "            new_inferred = False\n",
+        "            for premises, conclusion in self.rules:\n",
+        "                # Check if all premises are true (in facts)\n",
+        "                if all(premise in self.facts for premise in premises):\n",
+        "                    if conclusion not in self.facts:\n",
+        "                        print(f\"Inferred: {conclusion} from {premises}\")\n",
+        "                        self.facts.add(conclusion)\n",
+        "                        new_inferred = True\n",
+        "        return self.facts\n",
+        "\n",
+        "# Define the KB\n",
+        "kb = KnowledgeBase()\n",
+        "\n",
+        "# Add facts\n",
+        "kb.add_fact(('American', 'Robert'))\n",
+        "kb.add_fact(('Hostile', 'CountryA'))\n",
+        "kb.add_fact(('Missile', 'm1'))\n",
+        "kb.add_fact(('Sells', 'Robert', 'CountryA', 'm1'))\n",
+        "\n",
+        "# Add rules\n",
+        "# Rule 1: Missile is a Weapon\n",
+        "kb.add_rule([('Missile', 'm1')], ('Weapon', 'm1'))\n",
+        "\n",
+        "# Rule 2: If American(x) & Weapon(w) & Hostile(n) & Sells(x,n,w) => Criminal(x)\n",
+        "kb.add_rule(\n",
+        "    [('American', 'Robert'), ('Weapon', 'm1'), ('Hostile', 'CountryA'), ('Sells', 'Robert', 'CountryA', 'm1')],\n",
+        "    ('Criminal', 'Robert')\n",
+        ")\n",
+        "\n",
+        "# Run inference\n",
+        "final_facts = kb.infer()\n",
+        "\n",
+        "print(\"\\nFinal facts:\")\n",
+        "for fact in final_facts:\n",
+        "    print(fact)\n",
+        "\n",
+        "# Check if Robert is criminal\n",
+        "if ('Criminal', 'Robert') in final_facts:\n",
+        "    print(\"\\nConclusion: Robert is criminal.\")\n",
+        "else:\n",
+        "    print(\"\\nConclusion: Robert is NOT criminal.\")\n",
+        "\n",
+        "print(\"Shubhanshu Raj 1BM23CS325\")"
+      ],
+      "metadata": {
+        "id": "G8WkVGPXLvIM",
+        "outputId": "c11bd9c2-b205-427f-8108-cb3d39628647",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Inferred: ('Weapon', 'm1') from [('Missile', 'm1')]\n",
+            "Inferred: ('Criminal', 'Robert') from [('American', 'Robert'), ('Weapon', 'm1'), ('Hostile', 'CountryA'), ('Sells', 'Robert', 'CountryA', 'm1')]\n",
+            "\n",
+            "Final facts:\n",
+            "('American', 'Robert')\n",
+            "('Missile', 'm1')\n",
+            "('Criminal', 'Robert')\n",
+            "('Sells', 'Robert', 'CountryA', 'm1')\n",
+            "('Weapon', 'm1')\n",
+            "('Hostile', 'CountryA')\n",
+            "\n",
+            "Conclusion: Robert is criminal.\n",
+            "Shubhanshu Raj 1BM23CS325\n"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "name": "Welcome To Colab",
+      "toc_visible": true,
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
